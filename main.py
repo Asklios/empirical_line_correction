@@ -2,7 +2,7 @@ import json
 
 import calculate_factors
 from calculate_linear_correction import calculate_correction_data, calculate_regression
-from raster_optimized import apply_factors, apply_empirical_line_correction
+from raster import apply_factors, apply_empirical_line_correction
 from reference import get_reference_data
 
 filter_specs = json.loads(open('data/filter_specs.json', 'r').read())

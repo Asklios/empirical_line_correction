@@ -68,8 +68,7 @@ def fourier_smooth(data):
     return dict(zip(data.keys(), smoothed_values.real))
 
 
-def get_reference_data(filter_specs: dict):
-    data_dir = 'data/reference'
+def get_reference_data(filter_specs: dict, data_dir='data/reference'):
 
     reference_data = {}
 
