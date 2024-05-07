@@ -1,7 +1,8 @@
 if (!require("pacman")) install.packages("pacman")
 pacman::p_load(pacman, rjson, extrafont)
 Sys.setenv(LANG = "en") # set language to english
-setwd("M:\\Bachelorarbeit\\python\\empirical_line_correction\\evaluate\\evaluation")
+wd <- "M:\\Bachelorarbeit\\python\\empirical_line_correction\\evaluate\\evaluation"
+setwd(wd)
 loadfonts()
 
 output_factors <- fromJSON(file = "zonal_stats_output_factors.json")
@@ -10,6 +11,9 @@ skip_veg <- fromJSON(file = "zonal_stats_skip_veg.json")
 data <- list(output_factors, skip_non_veg, skip_veg)
 
 data_types <- c("output_factors", "skip_non_veg", "skip_veg")
+
+r_squared_veg <- fromJSON(file = paste0(wd, "\\..\\..\\plots\\skip_non_veg\\r_squared.json"))
+r_squared_non_veg <- fromJSON(file = paste0(wd, "\\..\\..\\plots\\skip_veg\\r_squared.json"))
 
 
 for (location in names(data[[1]])) {
@@ -21,10 +25,15 @@ for (location in names(data[[1]])) {
   hmr <- c()
   hmf <- c()
   data_type <- c()
+  r_squared_veg <- c()
+  r_squared_non_veg <- c()
   
   j <- 1
   for (d in data) {
     for (probe in names(d[[location]])) {
+      r_squared_veg <- c(r_squared_veg, r_squared_veg[[probe]])
+      r_squared_non_veg <- c(r_squared_non_veg, r_squared_non_veg[[probe]])
+      
       probe <- d[[location]][[probe]]
       max_values <- c(max_values, probe$max)
       mean_values <- c(mean_values, probe$mean)
@@ -126,9 +135,11 @@ for (d in data) {
   values_percentage <- c()
   hmr <- c()
   hmf <- c()
+  locations <- c()
   
   for (location in names(d)) {
     for (probe in names(d[[location]])) {
+      locations <- c(locations, location)
       probe <- d[[location]][[probe]]
       max_values <- c(max_values, probe$max)
       mean_values <- c(mean_values, probe$mean)

@@ -122,8 +122,12 @@ def calculate_regression(correction_data, band_source, skip=None, plot_path='plo
         band_id = str(band_source[key])
         coefficients_list[band_id] = [coefficients[0][0], coefficients[1]]
 
-    with open(plot_path + '/r_squared.json', 'w') as f:
+    with open(plot_path + '/r_squared_part_layer.json', 'w') as f:
         f.write(json.dumps(r_squared_list, indent=4))
+
+    with open(plot_path + '/r_squared.json', 'w') as f:
+        f.write(json.dumps({correction_data[key][list(correction_data[key].keys())[0]]['weighted_center']: value
+                            for key, value in r_squared_list.items()}, indent=4))
 
     with open(plot_path + '/coefficients.json', 'w') as f:
         f.write(json.dumps({key: f'* {value[0]} + {value[1]}'
