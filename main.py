@@ -6,6 +6,20 @@ from raster import apply_factors, apply_empirical_line_correction
 from reference import get_reference_data
 
 filter_specs = json.loads(open('data/filter_specs.json', 'r').read())
+
+new_filter_specs = {}
+for part, layers in filter_specs.items():
+    new_filter_specs[part] = {}
+    for layer, values in layers.items():
+        if int(layer) < 500:
+            rgb_layer = 'b'
+        elif int(layer) < 600:
+            rgb_layer = 'g'
+        else:
+            rgb_layer = 'r'
+        new_filter_specs[part][rgb_layer] = values
+filter_specs = new_filter_specs
+
 reference_data = get_reference_data(filter_specs)
 
 # Bands are ordered alphabetically by part and then by color (r, g, b)
@@ -35,15 +49,17 @@ factors = {b: factors[b] for b in used_band_ids}
 with open('factors.json', 'w') as f:
     f.write(json.dumps(factors, indent=4))
 
-apply_factors(factors, input_raster, 'E:/20240426/output_factors.tif')
+#apply_factors(factors, input_raster, 'E:/20240426/output_factors.tif')
+
+coefficients = calculate_regression(correction_data, band_source, plot_path='plots/no_skip', skip=None)
 
 coefficients = calculate_regression(correction_data, band_source, plot_path='plots/skip_non_veg',
                                     skip=[["Parkplatz", "Strase", "Acker", "Tartan"], ["TLQ_r"]])
 
-apply_empirical_line_correction(coefficients, input_raster, 'E:/20240426/output_skip_non_veg.tif')
+#apply_empirical_line_correction(coefficients, input_raster, 'E:/20240426/output_skip_non_veg.tif')
 
 coefficients = calculate_regression(correction_data, band_source, plot_path='plots/skip_veg',
                                     skip=[["Fussballplatz", "Ackergruen", "Wiese"], ["TLQ_r", "BMQ_r"]])
-apply_empirical_line_correction(coefficients, input_raster, 'E:/20240426/output_skip_veg.tif')
+#apply_empirical_line_correction(coefficients, input_raster, 'E:/20240426/output_skip_veg.tif')
 
 

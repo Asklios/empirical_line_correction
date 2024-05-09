@@ -89,7 +89,7 @@ def calculate_regression(correction_data, band_source, skip=None, plot_path='plo
 
         for probe in correction_data[key].keys():
 
-            if skip is not None:
+            if skip:
                 # skip some probes
                 if probe in skip[0]:
                     if key in skip[1]:
